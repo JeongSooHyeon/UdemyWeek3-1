@@ -4,23 +4,23 @@ using UnityEngine.UI;
 
 public class TextUI : MonoBehaviour
 {
-	private float timer = 15.0f;
-	private Text timerText;
-	public Text aiScore;
-	public Text playerScore;
+	private float timer = 15.0f;	// 게임 플레이 시간
+	private Text timerText;	// 시간 표시할 Text UI
+	public Text aiScore;	// ai의 점수 Text
+	public Text playerScore;	// 휴먼의 점수 Text
 
-	private Player_Base AIPlayer;
+	private Player_Base AIPlayer;	
 	private Player_Base Player;
 
-	public GameObject finish;
-	private string victory;
+	public GameObject finish;	// finish UI
+	private string victory;	// 승리한 사람의 텍스트
 
-	private float waitTime = 2.0f;
+	private float waitTime = 2.0f;	// 게임이 끝나고 애니메이션이 끝까지 실행될 때까지 기다리는 시간
 
-	private int aiCnt;
-	private int playerCnt;
+	private int aiCnt;	// 맞은 count
+	private int playerCnt;	// 맞은 count
 
-	private bool isFinish = false;
+	private bool isFinish = false;	// 게임 끝남
 
 	private void Start()
 	{
@@ -31,20 +31,21 @@ public class TextUI : MonoBehaviour
 
 	private void Update()
 	{
+		// 게임 실행 시간 세기
 		if (timer > 0)
 			timer -= Time.deltaTime;
 
-		aiCnt = AIPlayer.attackedCnt;
-		playerCnt = Player.attackedCnt;
 
 		// Timer
 		setTimer();
 
+		// UI 표시
 		timerText.text = timer.ToString("F0");
 		aiScore.text = "AI : " + aiCnt.ToString();
 		playerScore.text = "휴먼 : " + playerCnt.ToString();
 	}
 
+	// 게임 멈추기
 	void pauseGame()
 	{
 		waitTime -= Time.deltaTime;
@@ -56,20 +57,20 @@ public class TextUI : MonoBehaviour
 
 	void setTimer()
 	{
+		aiCnt = AIPlayer.attackedCnt;
+		playerCnt = Player.attackedCnt;
+
 		if ((int)timer <= 0 && !isFinish)
 		{
-			Debug.Log("AI " + aiCnt);
-			Debug.Log("Player " + playerCnt);
-
-			if (aiCnt > Player.attackedCnt)  // 사람이 이김
+			if (aiCnt > playerCnt)  // 사람이 이김
 			{
 				victory = "휴먼 승!";
-				AIPlayer.setFinish();
+				AIPlayer.setFinish();	// AI의 사망 애니메이션 실행
 			}
 			else if (aiCnt < playerCnt) // AI 이김
 			{
 				victory = "AI 승!";
-				Player.setFinish();
+				Player.setFinish();	// 사람의 사망 애니메이션 실행
 			}
 			else // 비김
 			{
